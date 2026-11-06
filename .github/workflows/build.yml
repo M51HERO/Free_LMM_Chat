@@ -1,3 +1,4 @@
+
 name: Build Android APK and Windows EXE
 
 on:
@@ -21,7 +22,16 @@ jobs:
 
       - name: Generate Android and Windows folders
         shell: pwsh
-        run: ./tool/setup.ps1
+        run: |
+          if (!(Test-Path "$env:GITHUB_WORKSPACE\tool\setup.ps1")) {
+            throw "tool/setup.ps1 was not found!"
+          }
+
+          & "$env:GITHUB_WORKSPACE\tool\setup.ps1"
+
+          if ($LASTEXITCODE -ne 0) {
+            throw "Setup script failed!"
+          }
 
       - name: Analyze project
         run: flutter analyze
@@ -53,3 +63,4 @@ jobs:
         with:
           name: Windows-Release
           path: windows-release.zip
+          
