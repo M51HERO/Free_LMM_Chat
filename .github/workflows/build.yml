@@ -1,0 +1,55 @@
+name: Build Android APK and Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.5'
+          channel: stable
+
+      - name: Generate Android and Windows folders
+        shell: pwsh
+        run: ./tool/setup.ps1
+
+      - name: Analyze project
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build Android APK
+        run: flutter build apk --release
+
+      - name: Build Windows EXE
+        run: flutter build windows --release
+
+      - name: Package Windows application
+        shell: pwsh
+        run: |
+          Compress-Archive `
+            -Path "build/windows/x64/runner/Release/*" `
+            -DestinationPath "windows-release.zip"
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Upload Windows application
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows-Release
+          path: windows-release.zip
