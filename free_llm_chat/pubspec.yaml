@@ -1,0 +1,27 @@
+name: free_llm_chat
+description: Minimal chat client for Manifest (open-source LLM gateway), with paid-model warnings.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.4.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  provider: ^6.1.2
+  http: ^1.2.2
+  hive_flutter: ^1.1.0
+  flutter_secure_storage: ^9.2.2
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
